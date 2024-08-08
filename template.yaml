@@ -1,0 +1,524 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Sample Node.js application with Sequelize ORM for MySQL
+
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+  Function:
+    Timeout: 60
+    MemorySize: 128
+
+Parameters:
+  DBHost:
+    Type: String
+    Default: "onemetric-dev-db.chg6s4sq85rw.us-east-1.rds.amazonaws.com"
+  DBUser:
+    Type: String
+    Default: "admin"
+  DBPassword:
+    Type: String
+    Default: "Nisharg2025"
+  DBName:
+    Type: String
+    Default: "onemetricdev"
+  DBPort:
+    Type: String
+    Default: "3306"
+  RazorpayWebhookSecret:
+    Type: String
+    Default: "your-webhook-secret"
+  RedisHost:
+    Type: String
+    Default: "redis-15098.c8.us-east-1-2.ec2.redns.redis-cloud.com"
+  RedisPort:
+    Type: String
+    Default: "15098"
+  RedisPassword:
+    Type: String
+    Default: "Cpi1kCLtrEelHIQT0PbLNlUEU7IgaVwe"
+  SecretKey:
+    Type: String
+    Default: "your-secret-key"
+
+Resources:
+  CreateUserFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/createUser.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        CreateUserApi:
+          Type: 'Api'
+          Properties:
+            Path: /user
+            Method: post
+
+  UserRegistrationFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/userRegistration.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        UserRegistrationApi:
+          Type: 'Api'
+          Properties:
+            Path: /userRegistration
+            Method: post
+
+  CreateUsersFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/createUsers.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        CreateUsersApi:
+          Type: 'Api'
+          Properties:
+            Path: /users
+            Method: post
+
+  GetAllUsersFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/getAllUsers.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        GetAllUsersApi:
+          Type: 'Api'
+          Properties:
+            Path: /allusers
+            Method: get
+
+  UserVerificationFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/userVerification.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        UserVerificationApi:
+          Type: 'Api'
+          Properties:
+            Path: /verification
+            Method: post
+
+  CheckMobileFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/checkMobile.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        CheckMobileApi:
+          Type: 'Api'
+          Properties:
+            Path: /check-mobile
+            Method: post
+
+  GetUserIdByMobileFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/getUserIdByMobile.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        GetUserIdByMobileApi:
+          Type: 'Api'
+          Properties:
+            Path: /get-user-id
+            Method: post
+
+  GetStocksFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/getStocks.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        GetStocksApi:
+          Type: 'Api'
+          Properties:
+            Path: /stocks
+            Method: get
+
+  GetNewsFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/getNews.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        GetNewsApi:
+          Type: 'Api'
+          Properties:
+            Path: /news
+            Method: get
+
+  GenerateOtpFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/generateOtp.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Timeout: 40
+      Environment:
+        Variables:
+          REDIS_HOST: !Ref RedisHost
+          REDIS_PORT: !Ref RedisPort
+          REDIS_PASSWORD: !Ref RedisPassword
+      Events:
+        GenerateOtpApi:
+          Type: 'Api'
+          Properties:
+            Path: /generate-otp
+            Method: post
+
+  VerifyOtpFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/verifyOtp.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          REDIS_HOST: !Ref RedisHost
+          REDIS_PORT: !Ref RedisPort
+          REDIS_PASSWORD: !Ref RedisPassword
+      Events:
+        VerifyOtpApi:
+          Type: 'Api'
+          Properties:
+            Path: /verify-otp
+            Method: post
+
+  SearchStocksFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/searchStocks.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        SearchStocksApi:
+          Type: 'Api'
+          Properties:
+            Path: /search-stocks
+            Method: get
+
+  AddStockFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/addStock.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        AddStockApi:
+          Type: 'Api'
+          Properties:
+            Path: /add-stock
+            Method: post
+
+  DeleteStockFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/deleteStock.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        DeleteStockApi:
+          Type: 'Api'
+          Properties:
+            Path: /delete-stock
+            Method: post
+
+  ProtectedRouteFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/protectedRoute.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+          SECRET_KEY: !Ref SecretKey
+      Events:
+        ProtectedRouteApi:
+          Type: 'Api'
+          Properties:
+            Path: /protected
+            Method: get
+
+  GetOrderFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/getOrder.handler
+      Runtime: nodejs20.x
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        Api:
+          Type: 'Api'
+          Properties:
+            Path: /order/{id}
+            Method: get
+
+  GetPlanListFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/getPlanList.getPlanList
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        GetPlanListApi:
+          Type: 'Api'
+          Properties:
+            Path: /plans
+            Method: get
+
+  CreatePlanFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/createPlan.createPlan
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        CreatePlanApi:
+          Type: 'Api'
+          Properties:
+            Path: /plans
+            Method: post
+
+  DeletePlanFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/deletePlan.deletePlan
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        DeletePlanApi:
+          Type: 'Api'
+          Properties:
+            Path: /plans/{id}
+            Method: delete
+
+  CreatePaymentFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/createPayment.createPayment
+      Runtime: nodejs20.x
+      CodeUri: .
+      Timeout: 40
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        CreatePaymentApi:
+          Type: 'Api'
+          Properties:
+            Path: /payment
+            Method: post
+
+  TransactionHistoryFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/transactionHistory.transactionHistoryAPI
+      Runtime: nodejs20.x
+      CodeUri: .
+      Timeout: 30
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+      Events:
+        TransactionHistoryEndpoint:
+          Type: 'Api'
+          Properties:
+            Path: /transactionHistory/{user_id}
+            Method: get
+            
+  RazorpayWebhookFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/webhookHandler.handleWebhook
+      Runtime: nodejs20.x
+      CodeUri: .
+      Timeout: 30
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          RAZORPAY_WEBHOOK_SECRET: !Ref RazorpayWebhookSecret
+      Events:
+        RazorpayWebhookApi:
+          Type: 'Api'
+          Properties:
+            Path: /webhooks/razorpay
+            Method: post
+  AddStockFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/addStockToWatchlist.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        AddStockApi:
+          Type: 'Api'
+          Properties:
+            Path: /add-stock
+            Method: post
+
+  DeleteStockFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handlers/deleteStockFromWatchlist.handler
+      Runtime: nodejs20.x
+      CodeUri: .
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          DB_PORT: !Ref DBPort
+      Events:
+        DeleteStockApi:
+          Type: 'Api'
+          Properties:
+            Path: /delete-stock
+            Method: post
